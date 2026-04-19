@@ -1,0 +1,12 @@
+build/
+*.obj
+*.o
+*.exe
+*.a
+*.so
+.vscode/
+.DS_Store
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+testbench/*.exe
