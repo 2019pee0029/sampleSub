@@ -12,18 +12,15 @@ SC_MODULE(subtractor)
     // Output port
     sc_out<int> difference;
     
-    // Constructor
+    // Constructor - must be inline for SC_CTOR macro
     SC_CTOR(subtractor)
     {
         SC_METHOD(compute_difference);
         sensitive << a << b;
     }
     
-    // Process: combinational logic
-    void compute_difference()
-    {
-        difference.write(a.read() - b.read());
-    }
+    // Process: combinational logic - declared here, implemented in cpp
+    void compute_difference();
 };
 
 #endif // SUBTRACTOR_H
