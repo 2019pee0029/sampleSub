@@ -1,9 +1,12 @@
 #include <systemc.h>
 #include <iostream>
+#include <iomanip>
+#include <vector>
 #include "../include/subtractor.h"
 
 using namespace std;
 
+// Parametrized testbench for subtractor with different test scenarios
 SC_MODULE(testbench)
 {
     sc_signal<int> sig_a, sig_b, sig_difference;
@@ -25,19 +28,52 @@ SC_MODULE(testbench)
     
     void generate_test_vectors()
     {
-        cout << "\n=== Subtractor Test Bench ===" << endl;
-        cout << "Format: A - B = Result [Expected] [PASS/FAIL]\n" << endl;
+        cout << "\n" << string(70, '=') << endl;
+        cout << "Parametrized Subtractor Test Bench" << endl;
+        cout << string(70, '=') << endl;
         
-        int test_count = 0;
-        int pass_count = 0;
+        // Run different test scenarios
+        test_basic_operations();
+        test_boundary_conditions();
+        test_edge_cases();
+        
+        cout << "\n" << string(70, '=') << endl;
+        cout << "All parametrized tests completed" << endl;
+        cout << string(70, '=') << endl;
+        
+        sc_stop();
+    }
+    
+    void test_basic_operations()
+    {
+        cout << "\n[TEST 1] Basic Operations" << endl;
+        cout << string(70, '-') << endl;
+        cout << "A     | B     | Result | Expected | Status" << endl;
+        cout << string(70, '-') << endl;
         
         // Test vectors: {a, b, expected_difference}
-        int tests[][3] = {
+        vector<vector<int>> tests = {
             {10, 5, 5},           // Positive - Positive
             {-10, -5, -5},        // Negative - Negative
             {10, -5, 15},         // Positive - Negative
             {-10, 5, -15},        // Negative - Positive
             {0, 0, 0},            // Zero - Zero
+        };
+        
+        int pass_count = run_test_scenario(tests);
+        
+        cout << "\nTest 1 Summary: " << pass_count << "/" << tests.size() 
+             << " passed" << endl;
+    }
+    
+    void test_boundary_conditions()
+    {
+        cout << "\n[TEST 2] Boundary Conditions" << endl;
+        cout << string(70, '-') << endl;
+        cout << "A     | B     | Result | Expected | Status" << endl;
+        cout << string(70, '-') << endl;
+        
+        vector<vector<int>> tests = {
             {100, 50, 50},        // Larger differences
             {-50, -100, 50},      // Smaller - Larger (negative)
             {42, 42, 0},          // Same values
@@ -45,9 +81,38 @@ SC_MODULE(testbench)
             {-100, 100, -200},    // Large difference
         };
         
-        int num_tests = sizeof(tests) / sizeof(tests[0]);
+        int pass_count = run_test_scenario(tests);
         
-        for (int i = 0; i < num_tests; i++)
+        cout << "\nTest 2 Summary: " << pass_count << "/" << tests.size() 
+             << " passed" << endl;
+    }
+    
+    void test_edge_cases()
+    {
+        cout << "\n[TEST 3] Edge Cases" << endl;
+        cout << string(70, '-') << endl;
+        cout << "A     | B     | Result | Expected | Status" << endl;
+        cout << string(70, '-') << endl;
+        
+        vector<vector<int>> tests = {
+            {0, 0, 0},            // Zero cases
+            {1, 0, 1},            // Subtract zero
+            {0, 1, -1},           // Zero minus one
+            {-1, -1, 0},          // Negative edge case
+            {1000, -1000, 2000},  // Large values
+        };
+        
+        int pass_count = run_test_scenario(tests);
+        
+        cout << "\nTest 3 Summary: " << pass_count << "/" << tests.size() 
+             << " passed" << endl;
+    }
+    
+    int run_test_scenario(const vector<vector<int>>& tests)
+    {
+        int pass_count = 0;
+        
+        for (size_t i = 0; i < tests.size(); i++)
         {
             int a_val = tests[i][0];
             int b_val = tests[i][1];
@@ -63,21 +128,14 @@ SC_MODULE(testbench)
             int result = sig_difference.read();
             bool pass = (result == expected);
             
-            cout << a_val << " - " << b_val << " = " << result 
-                 << " [" << expected << "] "
+            cout << setw(5) << a_val << " | " << setw(5) << b_val << " | " 
+                 << setw(6) << result << " | " << setw(8) << expected << " | "
                  << (pass ? "[PASS]" : "[FAIL]") << endl;
             
-            test_count++;
             if (pass) pass_count++;
         }
         
-        cout << "\n=== Test Summary ===" << endl;
-        cout << "Total Tests: " << test_count << endl;
-        cout << "Passed: " << pass_count << endl;
-        cout << "Failed: " << (test_count - pass_count) << endl;
-        cout << "Success Rate: " << (100 * pass_count / test_count) << "%" << endl;
-        
-        sc_stop();
+        return pass_count;
     }
 };
 
