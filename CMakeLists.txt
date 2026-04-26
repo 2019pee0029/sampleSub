@@ -17,19 +17,35 @@ include_directories(${SYSTEMC_HOME}/include)
 # Define SystemC libraries
 set(SYSTEMC_LIBRARIES ${SYSTEMC_HOME}/lib/libsystemc.a)
 
-# Testbench files
-set(TESTBENCH
+# Testbench files - Original subtractor
+set(TESTBENCH_ORIGINAL
     testbench/tb_subtractor.cpp
     src/subtractor.cpp
 )
 
-# Create the testbench executable
-add_executable(tb_subtractor ${TESTBENCH})
+# Create the original testbench executable
+add_executable(tb_subtractor ${TESTBENCH_ORIGINAL})
 
 # Link the SystemC library
 target_link_libraries(tb_subtractor ${SYSTEMC_LIBRARIES})
 
 # Set output directory
 set_target_properties(tb_subtractor PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/testbench
+)
+
+# Testbench files - Parametrized subtractor with overflow detection
+set(TESTBENCH_PARAMETRIZED
+    testbench/tb_parametrized.cpp
+)
+
+# Create the parametrized testbench executable
+add_executable(tb_parametrized ${TESTBENCH_PARAMETRIZED})
+
+# Link the SystemC library
+target_link_libraries(tb_parametrized ${SYSTEMC_LIBRARIES})
+
+# Set output directory
+set_target_properties(tb_parametrized PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/testbench
 )
