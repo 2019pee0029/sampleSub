@@ -15,7 +15,7 @@ echo "=========================================="
 echo ""
 
 # Clean previous build
-echo "[1/2] Configuring and building project..."
+echo "[1/3] Configuring and building project..."
 rm -rf build
 mkdir -p build
 
@@ -23,10 +23,29 @@ mkdir -p build
 cmake -S . -B build
 cmake --build build
 
-# Run testbench
+# Run parametrized testbench (comprehensive test with boundary/saturation/flag validation)
 echo ""
 echo "=========================================="
-echo "Running Subtractor Testbench"
+echo "Running Parametrized Subtractor Testbench"
+echo "=========================================="
+echo ""
+
+if [ -f "build/testbench/tb_parametrized" ] || [ -f "build/testbench/tb_parametrized.exe" ]; then
+    if [ -f "build/testbench/tb_parametrized.exe" ]; then
+        ./build/testbench/tb_parametrized.exe
+    else
+        ./build/testbench/tb_parametrized
+    fi
+    echo ""
+else
+    echo "ERROR: Parametrized testbench executable not found!"
+    exit 1
+fi
+
+# Run original testbench (basic tests with parametrized scenarios)
+echo ""
+echo "=========================================="
+echo "Running Original Subtractor Testbench"
 echo "=========================================="
 echo ""
 
@@ -37,10 +56,11 @@ if [ -f "build/testbench/tb_subtractor" ] || [ -f "build/testbench/tb_subtractor
         ./build/testbench/tb_subtractor
     fi
     echo ""
-    echo "=========================================="
-    echo "Test execution completed"
-    echo "=========================================="
 else
-    echo "ERROR: Testbench executable not found!"
+    echo "ERROR: Basic testbench executable not found!"
     exit 1
 fi
+
+echo "=========================================="
+echo "All tests execution completed"
+echo "=========================================="
