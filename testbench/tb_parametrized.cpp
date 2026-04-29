@@ -325,7 +325,7 @@ SC_MODULE(testbench_parametrized)
             {-128, -1, -127, false, false, "MIN-(-1)"},
             {127, 1, 126, false, false, "MAX-1"},
             {1, 127, -126, false, false, "1-MAX"},
-            {-1, -128, 127, true, false, "-1-MIN (OV to 127)"},
+            {-1, -128, 127, false, false, "-1-MIN = MAX (valid)"},
             
             // Saturation verification (should clamp exactly)
             {100, -50, 127, true, false, "Saturate to MAX"},
@@ -410,7 +410,7 @@ SC_MODULE(testbench_parametrized)
             {-32768, -1, -32767, false, false, "MIN-(-1)"},
             {32767, 1, 32766, false, false, "MAX-1"},
             {1, 32767, -32766, false, false, "1-MAX"},
-            {-1, -32768, 32767, true, false, "-1-MIN (OV)"},
+            {-1, -32768, 32767, false, false, "-1-MIN = MAX (valid)"},
             
             // Saturation
             {20000, -20000, 32767, true, false, "Saturate to MAX"},
@@ -492,7 +492,7 @@ SC_MODULE(testbench_parametrized)
             {-2147483648, -1, -2147483647, false, false, "MIN-(-1)"},
             {2147483647, 1, 2147483646, false, false, "MAX-1"},
             {1, 2147483647, -2147483646, false, false, "1-MAX"},
-            {-1, -2147483648, 2147483647, true, false, "-1-MIN (OV)"},
+            {-1, -2147483648, 2147483647, false, false, "-1-MIN = MAX (valid)"},
             
             // Saturation
             {1500000000, -700000000, 2147483647, true, false, "Saturate to MAX"},
